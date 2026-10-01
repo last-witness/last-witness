@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Последният Свидетел</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --bg: #0a0a0c;
+    --bg-card: #14141a;
+    --gold: #c9a961;
+    --gold-bright: #e8c88a;
+    --red: #8b1e1e;
+    --text: #e8e6e0;
+    --text-dim: #8a8a90;
+    --border: #2a2a32;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: #050507;
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url('images/city.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(2px) brightness(0.55) saturate(0.85);
+    transform: scale(1.03);
+    z-index: -3;
+  }
+
+  body { background-color: #050507; }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(5,5,7,0.55) 0%, rgba(5,5,7,0.75) 100%);
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  .header { text-align: center; padding: 50px 20px 30px; position: relative; }
+  .header::before {
+    content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 60%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .header h1 {
+    font-size: 44px; font-weight: 400; letter-spacing: 8px;
+    color: var(--gold-bright); text-transform: uppercase; margin-bottom: 12px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(201,169,97,0.4);
+    animation: titleGlow 4s ease-in-out infinite alternate;
+  }
+  @keyframes titleGlow {
+    0% { text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(201,169,97,0.3); }
+    100% { text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 60px rgba(201,169,97,0.6); }
+  }
+  .header .subtitle {
+    font-size: 13px; color: var(--text-dim); letter-spacing: 5px;
+    text-transform: uppercase; font-style: italic;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+  }
+  .header .ornament {
+    color: var(--gold); font-size: 16px; margin-top: 16px; letter-spacing: 12px;
+    text-shadow: 0 0 20px rgba(201,169,97,0.5);
+  }
+
+  .nav {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    padding: 18px; position: sticky; top: 0;
+    background: rgba(5,5,7,0.85); backdrop-filter: blur(16px);
+    z-index: 100; border-bottom: 1px solid var(--border);
+  }
+  .nav a {
+    padding: 10px 18px; color: var(--text-dim); text-decoration: none;
+    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+    border: 1px solid transparent; border-radius: 4px; transition: all 0.3s;
+    font-family: 'Georgia', serif; display: flex; align-items: center;
+    gap: 6px; cursor: pointer;
+  }
+  .nav a .icon { font-size: 15px; }
+  .nav a:hover, .nav a.active {
+    color: var(--gold-bright); border-color: var(--gold);
+    background: rgba(201,169,97,0.1);
+  }
+
+  .container {
+    max-width: 1100px; margin: 0 auto; padding: 0 20px 80px;
+    position: relative; z-index: 1;
+  }
+
+  .section { display: none; padding: 40px 0 30px; animation: fadeIn 0.4s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header { text-align: center; margin-bottom: 40px; }
+  .section-header h2 {
+    font-size: 30px; font-weight: 400; letter-spacing: 4px;
+    color: var(--gold-bright); text-transform: uppercase; margin-bottom: 10px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 30px rgba(201,169,97,0.3);
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+  }
+  .section-header h2 .icon { font-size: 32px; }
+  .section-header .line {
+    width: 80px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 14px;
+  }
+  .section-header p {
+    font-size: 14px; color: var(--text-dim); font-style: italic;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+  }
+
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; background: rgba(20,20,26,0.85);
+    border: 1px solid var(--border); color: var(--text-dim);
+    text-decoration: none; border-radius: 6px; font-size: 12px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    transition: all 0.3s; cursor: pointer; margin-bottom: 30px;
+    font-family: 'Georgia', serif;
+  }
+  .back-btn:hover {
+    color: var(--gold-bright); border-color: var(--gold);
+    background: rgba(201,169,97,0.1);
+  }
+
+  .thanks-box {
+    background: linear-gradient(135deg, rgba(30,25,20,0.92) 0%, rgba(15,12,10,0.92) 100%);
+    border: 1px solid rgba(201,169,97,0.4); border-radius: 14px;
+    padding: 40px 36px; text-align: center; margin-bottom: 30px;
+    backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    position: relative; overflow: hidden;
+  }
+  .thanks-box::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .thanks-box h3 {
+    font-size: 22px; color: var(--gold-bright); letter-spacing: 4px;
+    text-transform: uppercase; margin-bottom: 22px; font-weight: 400;
+    text-shadow: 0 0 20px rgba(201,169,97,0.4);
+  }
+  .thanks-box p {
+    font-size: 15px; color: var(--text); line-height: 1.9;
+    font-style: italic; margin-bottom: 16px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  }
+  .thanks-box p:last-child { margin-bottom: 0; }
+
+  .home-story {
+    background: rgba(15,15,20,0.88); border: 1px solid var(--border);
+    border-radius: 14px; padding: 40px 36px; position: relative;
+    overflow: hidden; backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6); margin-bottom: 40px;
+  }
+  .home-story::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+  }
+  .home-story h3 {
+    font-size: 18px; color: var(--gold-bright); letter-spacing: 4px;
+    text-transform: uppercase; margin-bottom: 24px; font-weight: 400;
+    text-align: center; text-shadow: 0 0 20px rgba(201,169,97,0.3);
+  }
+  .home-story p {
+    font-size: 15px; color: var(--text); line-height: 1.9;
+    margin-bottom: 14px; font-style: italic;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  }
+  .home-story p:last-child {
+    margin-bottom: 0; text-align: center; font-style: normal;
+    font-size: 17px; color: var(--gold-bright);
+    margin-top: 24px; letter-spacing: 2px;
+  }
+  .home-story .highlight { color: var(--gold-bright); font-style: normal; }
+
+  .cta-wrapper { text-align: center; padding: 20px 0 40px; }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 18px 42px;
+    background: linear-gradient(135deg, rgba(201,169,97,0.15) 0%, rgba(139,30,30,0.15) 100%);
+    border: 1px solid var(--gold); color: var(--gold-bright);
+    font-size: 15px; letter-spacing: 3px; text-transform: uppercase;
+    text-decoration: none; border-radius: 6px; transition: all 0.4s;
+    font-family: 'Georgia', serif; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .cta-btn:hover {
+    background: linear-gradient(135deg, rgba(201,169,97,0.3) 0%, rgba(139,30,30,0.3) 100%);
+    box-shadow: 0 8px 30px rgba(201,169,97,0.4);
+    transform: translateY(-2px);
+  }
+
+  .rules-toggle {
+    display: flex; justify-content: center; gap: 10px; margin-bottom: 30px;
+  }
+  .toggle-btn {
+    padding: 12px 28px; background: rgba(20,20,26,0.85);
+    border: 1px solid var(--border); color: var(--text-dim);
+    font-family: 'Georgia', serif; font-size: 13px; letter-spacing: 2px;
+    text-transform: uppercase; border-radius: 6px; cursor: pointer;
+    transition: all 0.3s; backdrop-filter: blur(12px);
+  }
+  .toggle-btn:hover { color: var(--gold-bright); border-color: rgba(201,169,97,0.5); }
+  .toggle-btn.active {
+    background: linear-gradient(135deg, rgba(201,169,97,0.2) 0%, rgba(139,30,30,0.2) 100%);
+    color: var(--gold-bright); border-color: var(--gold);
+    box-shadow: 0 4px 20px rgba(201,169,97,0.25);
+  }
+
+  .rules-content { display: none; animation: fadeIn 0.4s ease; }
+  .rules-content.active { display: block; }
+  .rules-part { margin-bottom: 40px; }
+
+  .part-title {
+    font-size: 18px; color: var(--gold-bright); letter-spacing: 3px;
+    text-transform: uppercase; text-align: center; margin-bottom: 22px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--border);
+    font-weight: 400; display: flex; align-items: center;
+    justify-content: center; gap: 12px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 20px rgba(201,169,97,0.3);
+  }
+  .part-title .icon { font-size: 24px; }
+
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .rule-box {
+    background: rgba(15,15,20,0.88); border: 1px solid var(--border);
+    border-radius: 12px; padding: 26px 24px;
+    backdrop-filter: blur(12px); transition: all 0.3s;
+    position: relative; overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+  }
+  .rule-box::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--gold), transparent);
+  }
+  .rule-box:hover {
+    border-color: rgba(201,169,97,0.5); transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,169,97,0.2);
+  }
+  .rule-box h3 {
+    font-size: 15px; color: var(--gold-bright); letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 14px; font-weight: 500;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .rule-box h3 .icon { font-size: 20px; }
+  .rule-box ul { list-style: none; padding: 0; }
+  .rule-box ul li {
+    font-size: 14px; color: var(--text); padding: 6px 0 6px 20px;
+    position: relative; line-height: 1.6;
+  }
+  .rule-box ul li::before {
+    content: '◆'; position: absolute; left: 0; color: var(--gold);
+    font-size: 8px; top: 11px;
+  }
+  .rule-box .highlight { color: var(--gold-bright); }
+  .rule-box .voice-line {
+    font-style: italic; color: var(--gold-bright); font-size: 14px;
+    padding: 12px 18px; border-left: 2px solid var(--gold);
+    background: rgba(201,169,97,0.06); border-radius: 0 6px 6px 0;
+    margin-bottom: 14px; line-height: 1.7;
+  }
+  .rules-part .rule-box { margin-bottom: 18px; }
+
+  /* Location rules section */
+  .location-rule {
+    background: rgba(15,15,20,0.88); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px 26px; margin-bottom: 22px;
+    backdrop-filter: blur(12px); position: relative; overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+  }
+  .location-rule::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--gold), transparent);
+  }
+  .location-rule h4 {
+    font-size: 17px; color: var(--gold-bright); letter-spacing: 3px;
+    text-transform: uppercase; margin-bottom: 16px; font-weight: 400;
+    display: flex; align-items: center; gap: 12px;
+    text-shadow: 0 0 20px rgba(201,169,97,0.3);
+  }
+  .location-rule h4 .icon { font-size: 24px; }
+  .location-rule p {
+    font-size: 14px; color: var(--text); line-height: 1.8;
+    margin-bottom: 14px;
+  }
+  .location-rule p:last-child { margin-bottom: 0; }
+  .location-rule .highlight { color: var(--gold-bright); font-weight: 500; }
+  .location-rule .voice-line {
+    font-style: italic; color: var(--gold-bright); font-size: 14px;
+    padding: 12px 18px; border-left: 2px solid var(--gold);
+    background: rgba(201,169,97,0.06); border-radius: 0 6px 6px 0;
+    margin: 14px 0; line-height: 1.7;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 18px; margin-top: 20px;
+  }
+
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; cursor: pointer; transition: all 0.3s ease;
+    position: relative; overflow: hidden; aspect-ratio: 2 / 3;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  }
+  .card:hover {
+    border-color: var(--gold); transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.8), 0 0 0 1px rgba(201,169,97,0.3);
+  }
+  .card:hover .card-image { transform: scale(1.05); }
+
+  .card-image-wrapper {
+    width: 100%; height: 100%; overflow: hidden;
+    position: relative; background: #0a0a0c;
+  }
+  .card-image {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block; transition: transform 0.5s ease;
+  }
+  .card-fallback {
+    position: absolute; inset: 0; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 48px;
+    background: linear-gradient(135deg, #1a1a22 0%, #0f0f14 100%);
+    color: var(--gold);
+    filter: drop-shadow(0 0 12px rgba(201,169,97,0.3));
+  }
+  .card-image:not([src=""]) + .card-fallback { display: none; }
+  .card-image[src=""] + .card-fallback { display: flex; }
+  .card-image:not([src=""]) { display: block; }
+  .card-image[src=""] { display: none; }
+
+  .card-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 30px 12px 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+    text-align: center; pointer-events: none;
+  }
+  .card-overlay .name {
+    font-size: 13px; font-weight: 500; color: var(--gold-bright);
+    letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+  }
+  .card-overlay .tag {
+    font-size: 9px; color: var(--text-dim); letter-spacing: 1px;
+    text-transform: uppercase; margin-top: 3px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+  }
+  .card-overlay .tag.bad { color: #e74c3c; }
+  .card-overlay .tag.good { color: #6bc47e; }
+  .card-overlay .tag.neutral { color: #b07cc6; }
+
+  .example-box {
+    background: rgba(15,15,20,0.88); border: 1px solid var(--border);
+    border-radius: 12px; padding: 26px 28px; margin-bottom: 20px;
+    backdrop-filter: blur(12px); position: relative;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+  }
+  .example-box::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--gold), transparent);
+  }
+  .example-box h3 {
+    font-size: 15px; color: var(--gold-bright); letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 16px; font-weight: 500;
+  }
+  .example-box .voice-line {
+    font-style: italic; color: var(--gold-bright); font-size: 15px;
+    padding: 12px 18px; border-left: 2px solid var(--gold);
+    background: rgba(201,169,97,0.06); border-radius: 0 6px 6px 0;
+    margin-bottom: 14px; line-height: 1.7;
+  }
+  .example-box p {
+    font-size: 14px; color: var(--text);
+    line-height: 1.7; margin-bottom: 10px;
+  }
+  .example-box p:last-child { margin-bottom: 0; }
+
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(10px); display: none;
+    align-items: center; justify-content: center;
+    padding: 20px; z-index: 1000; opacity: 0; transition: opacity 0.3s;
+  }
+  .modal-overlay.active { display: flex; opacity: 1; }
+  .modal {
+    background: var(--bg-card); border: 1px solid var(--gold);
+    border-radius: 14px; max-width: 520px; width: 100%;
+    max-height: 90vh; overflow-y: auto; position: relative;
+    transform: scale(0.9); transition: transform 0.3s;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(201,169,97,0.15);
+  }
+  .modal-overlay.active .modal { transform: scale(1); }
+
+  .modal-image-wrapper {
+    width: 100%; max-height: 40vh; overflow: hidden;
+    position: relative; background: #0a0a0c;
+    border-radius: 14px 14px 0 0; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    padding: 14px;
+  }
+  .modal-image {
+    max-width: 100%; max-height: 36vh; width: auto; height: auto;
+    object-fit: contain; display: block; border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
+
+  .modal-header {
+    padding: 20px 24px 16px; border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+  .modal-header h3 {
+    font-size: 20px; font-weight: 400; letter-spacing: 2px;
+    color: var(--gold-bright); text-transform: uppercase;
+  }
+  .modal-header .badge {
+    display: inline-block; font-size: 10px; padding: 3px 12px;
+    border-radius: 10px; margin-top: 8px; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .badge-bad { background: rgba(192,57,43,0.2); color: #e74c3c; border: 1px solid rgba(192,57,43,0.4); }
+  .badge-good { background: rgba(74,157,95,0.2); color: #6bc47e; border: 1px solid rgba(74,157,95,0.4); }
+  .badge-neutral { background: rgba(155,89,182,0.2); color: #b07cc6; border: 1px solid rgba(155,89,182,0.4); }
+
+  .modal-body { padding: 20px 24px 24px; }
+  .modal-body .quote {
+    font-style: italic; color: var(--text-dim); font-size: 13px;
+    text-align: center; padding: 12px;
+    border-left: 2px solid var(--gold); border-right: 2px solid var(--gold);
+    margin-bottom: 18px; background: rgba(201,169,97,0.04);
+  }
+  .modal-body h4 {
+    font-size: 12px; color: var(--gold-bright); letter-spacing: 1.5px;
+    text-transform: uppercase; margin: 16px 0 8px; font-weight: 500;
+  }
+  .modal-body h4:first-child { margin-top: 0; }
+  .modal-body ul { list-style: none; padding: 0; }
+  .modal-body ul li {
+    font-size: 13px; color: var(--text); padding: 5px 0 5px 18px;
+    position: relative; line-height: 1.5;
+  }
+  .modal-body ul li::before {
+    content: '◆'; position: absolute; left: 0; color: var(--gold);
+    font-size: 8px; top: 9px;
+  }
+  .modal-body p {
+    font-size: 13px; color: var(--text);
+    line-height: 1.6; margin-bottom: 10px;
+  }
+  .modal-body .pros-cons {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 14px; margin-top: 14px;
+  }
+  .modal-body .pros, .modal-body .cons {
+    padding: 12px 14px; border-radius: 8px; font-size: 12px;
+  }
+  .modal-body .pros { background: rgba(74,157,95,0.08); border: 1px solid rgba(74,157,95,0.25); }
+  .modal-body .cons { background: rgba(192,57,43,0.08); border: 1px solid rgba(192,57,43,0.25); }
+  .modal-body .pros h5, .modal-body .cons h5 {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 8px; font-weight: 600;
+  }
+  .modal-body .pros h5 { color: #6bc47e; }
+  .modal-body .cons h5 { color: #e74c3c; }
+  .modal-body .pros ul li, .modal-body .cons ul li {
+    font-size: 12px; padding: 3px 0 3px 14px;
+  }
+  .modal-body .pros ul li::before { content: '+'; color: #6bc47e; font-weight: bold; font-size: 12px; top: 3px; }
+  .modal-body .cons ul li::before { content: '−'; color: #e74c3c; font-weight: bold; font-size: 12px; top: 3px; }
+
+  .modal-close {
+    position: absolute; top: 12px; right: 16px;
+    background: rgba(0,0,0,0.7); border: 1px solid var(--border);
+    color: var(--text); font-size: 22px; cursor: pointer;
+    width: 36px; height: 36px; display: flex;
+    align-items: center; justify-content: center;
+    border-radius: 50%; transition: all 0.2s;
+    font-family: sans-serif; z-index: 10;
+  }
+  .modal-close:hover {
+    color: var(--gold-bright); background: rgba(201,169,97,0.2);
+    border-color: var(--gold);
+  }
+
+  .footer {
+    text-align: center; padding: 50px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim); font-size: 11px;
+    letter-spacing: 3px; text-transform: uppercase;
+    position: relative; z-index: 1;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+  }
+  .footer .ornament {
+    color: var(--gold); font-size: 14px;
+    letter-spacing: 8px; margin-bottom: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 26px; letter-spacing: 4px; }
+    .header .subtitle { font-size: 11px; letter-spacing: 2px; }
+    .section-header h2 { font-size: 22px; letter-spacing: 2px; }
+    .section-header h2 .icon { font-size: 24px; }
+    .card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .card-overlay .name { font-size: 11px; }
+    .card-overlay .tag { font-size: 8px; }
+    .nav a { font-size: 10px; padding: 7px 11px; }
+    .nav a .icon { font-size: 13px; }
+    .home-story { padding: 28px 20px; }
+    .home-story p { font-size: 14px; }
+    .thanks-box { padding: 28px 20px; }
+    .thanks-box h3 { font-size: 18px; }
+    .modal-header h3 { font-size: 17px; }
+    .modal-image-wrapper { max-height: 32vh; padding: 10px; }
+    .modal-image { max-height: 28vh; }
+    .modal-body .pros-cons { grid-template-columns: 1fr; }
+    .cta-btn { padding: 14px 28px; font-size: 13px; }
+    .rules-toggle { flex-direction: column; align-items: center; }
+    .toggle-btn { width: 200px; }
+    .part-title { font-size: 15px; letter-spacing: 2px; }
+    .part-title .icon { font-size: 20px; }
+    .location-rule h4 { font-size: 14px; }
+    .location-rule h4 .icon { font-size: 20px; }
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: var(--bg); }
+  .modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .modal::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Последният Свидетел</h1>
+  <div class="subtitle">Настолна игра за дедукция и предателство</div>
+  <div class="ornament">✦ ✦ ✦</div>
+</div>
+
+<div class="nav">
+  <a onclick="showSection('home')" class="active" data-section="home"><span class="icon">🏠</span>Начало</a>
+  <a onclick="showSection('rules')" data-section="rules"><span class="icon">📜</span>Правила</a>
+  <a onclick="showSection('roles')" data-section="roles"><span class="icon">🎭</span>Роли</a>
+  <a onclick="showSection('events')" data-section="events"><span class="icon">🃏</span>Събития</a>
+  <a onclick="showSection('weapons')" data-section="weapons"><span class="icon">🔫</span>Оръжия</a>
+  <a onclick="showSection('locations')" data-section="locations"><span class="icon">🗺️</span>Локации</a>
+  <a onclick="showSection('examples')" data-section="examples"><span class="icon">🎙️</span>Примери</a>
+</div>
+
+<div class="container">
+
+  <!-- НАЧАЛО -->
+  <div class="section active" id="home">
+    <div class="section-header">
+      <h2><span class="icon">🏠</span>Начало</h2>
+      <div class="line"></div>
+      <p>Благодарност и история</p>
+    </div>
+
+    <div class="thanks-box">
+      <h3>Благодарност</h3>
+      <p>Благодарим ти, че избра „Последният Свидетел".</p>
+      <p>Тази игра е създадена с много любов, вдъхновение и безброй часове труд. Вярваме, че ще ти донесе незабравими вечери с приятели, смях, напрежение и онези моменти, в които никой не знае на кого да вярва.</p>
+      <p>Ти държиш в ръцете си не просто кутия. Ти държиш цял един град, потънал в мъгла. И сега той е твой.</p>
+      <p>Нека започнем.</p>
+    </div>
+
+    <div class="home-story">
+      <h3>Историята</h3>
+      <p>Дъждът не спира от три дни. Ти беше на път за никъде. Помниш само, че беше късно. Твърде късно. И че телефонът ти умря преди час.</p>
+      <p>Пътят беше пуст. Само ти и мъглата. И тогава — знак. „2 км."</p>
+      <p>Не беше планирал да спираш. Но бензинът привършваше. Реши да влезеш.</p>
+      <p>Градът беше малък. Тесни калдъръмени улици. Стари сгради с железни балкони. Жълти газени лампи.</p>
+      <p>Но най-странна беше мъглата. Тя не се вдигаше. Живееше. Пълзеше по улиците, влизаше в домовете. Казват, че ако стоиш в нея твърде дълго, започваш да забравяш. Първо — имена. После — лица. Накрая — себе си.</p>
+      <p>Спря пред третата сграда. Вътре имаше светлина. Вътре седяха хора. Уморени. Уплашени. Те не бяха случайни пътници — те живееха тук. Това беше техният дом. Техният затвор.</p>
+      <p>Ти седна при тях. Един старец се наведе към теб.</p>
+      <p>„Нов си, нали? От месеци хора изчезват. Намираме ги мъртви. По един и същ начин. С едно и също оръжие. Полицията си тръгна и не се върна. Ако можеш — бягай."</p>
+      <p>И тогава светлините угаснаха.</p>
+      <p>Чу се глас. Тих, дълбок, сякаш идеше отвсякъде. Но този път беше само в твоята глава.</p>
+      <p>„Чуваш ли ме? Аз съм Гласът на забравените. Духът на всички, които изчезнаха. Тази нощ ще има още една смърт. Утре ще намерите тяло. Но ти можеш да го спреш. Ти си Последният Свидетел."</p>
+      <p>Ти се изправи. Ръцете ти трепереха. Но гласът ти беше твърд.</p>
+      <p>„Чух нещо. Глас. Каза ми, че тази нощ ще има убийство."</p>
+      <p>Всички замлъкнаха. Никой не се засмя. Никой не каза „луд ли си?".</p>
+      <p>Защото всички знаеха — от месеци хора изчезват. И никой не знае защо.</p>
+      <p>Светлините угаснаха отново. Този път гласът беше чут от всички.</p>
+      <p>„Жители на Града на забравените. Сред вас има убиец. Един от вас. Той е тук, на тази маса."</p>
+      <p>„Тази нощ ще има още една смърт. Освен ако не го намерите."</p>
+      <p>„Намерете убиеца — преди да е убил вас."</p>
+      <p>Светлините се върнаха. Но никой вече не се смееше.</p>
+    </div>
+
+    <div class="cta-wrapper">
+      <a onclick="showSection('rules')" class="cta-btn">
+        <span>📜</span> Към правилата
+      </a>
+    </div>
+  </div>
+
+  <!-- ПРАВИЛА -->
+  <div class="section" id="rules">
+    <button class="back-btn" onclick="showSection('home')">← Обратно към началото</button>
+
+    <div class="section-header">
+      <h2><span class="icon">📜</span>Правила</h2>
+      <div class="line"></div>
+      <p>Как се играе играта</p>
+    </div>
+
+    <div class="rules-toggle">
+      <button class="toggle-btn active" onclick="showRules('short')" id="btnShort">
+        📖 Кратко
+      </button>
+      <button class="toggle-btn" onclick="showRules('full')" id="btnFull">
+        📚 Пълно
+      </button>
+    </div>
+
+    <!-- КРАТКА ВЕРСИЯ -->
+    <div id="rulesShort" class="rules-content active">
+      <div class="rules-grid">
+        <div class="rule-box">
+          <h3><span class="icon">🎮</span>Основни</h3>
+          <ul>
+            <li><span class="highlight">Играчи:</span> 6 – 12 + 1 Глас</li>
+            <li><span class="highlight">Време:</span> 20 – 30 минути</li>
+            <li><span class="highlight">Цел:</span> Добрите намират убиеца</li>
+            <li>Всеки получава тайна роля</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🎭</span>Задължителни роли</h3>
+          <ul>
+            <li>🔴 Сериен убиец — 1</li>
+            <li>⚗️ Алхимик — 1</li>
+            <li>⚪ Свидетел — 1+</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🎭</span>По желание</h3>
+          <ul>
+            <li>🔮 Ясновидец — при 7+ играчи</li>
+            <li>🚔 Комисар — при 8+ играчи</li>
+            <li>🔍 Следотърсач — при 8+ играчи</li>
+            <li>🛡️ Бодигард — при 9+ играчи</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🔫</span>Оръжия</h3>
+          <ul>
+            <li>7 оръжия общо</li>
+            <li><span class="highlight">Всяко оръжие може да се използва навсякъде</span></li>
+            <li>Не зависи от локацията</li>
+            <li>Убиецът избира 1 оръжие тайно</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🌙</span>Нощна фаза</h3>
+          <ul>
+            <li>Всички затварят очи</li>
+            <li>Убиецът избира жертва</li>
+            <li>Алхимикът лекува</li>
+            <li>Другите роли действат (от 2-ра нощ)</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">☀️</span>Дневна фаза</h3>
+          <ul>
+            <li>Обявява се кой е убит</li>
+            <li>Убитият показва оръжието си</li>
+            <li>Дискусия (3–5 минути)</li>
+            <li>Гласуване за елиминиране</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🏆</span>Край на играта</h3>
+          <ul>
+            <li>Всички убийци елиминирани → 🔵 Добрите печелят</li>
+            <li>Убийците са мнозинство → 🔴 Убийците печелят</li>
+            <li>Всички добри мъртви → 🔴 Убийците печелят</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🃏</span>Карти на Гласа</h3>
+          <ul>
+            <li>Включват се след 2–3 кръга</li>
+            <li>Гласът тегли 1 карта на кръг</li>
+            <li>Изиграва я когато реши</li>
+            <li>Играчите виждат само ефекта</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="part-title" style="margin-top: 40px;"><span class="icon">🗺️</span>Как се играе във всяка локация</h3>
+
+      <div class="location-rule">
+        <h4><span class="icon">🏥</span>Болница</h4>
+        <p><span class="highlight">Бонуси:</span> Алхимикът лекува 2-ма всяка вечер. Всеки може да бъде спасен веднъж (монета). Комисарят вижда ролята на убит.</p>
+        <p><span class="highlight">Минуси:</span> Безшумно убийство с медицинско оръжие (Следотърсачът вижда „Колеблива улика" за грешен играч). Анонимно гласуване. Никой не говори през нощта.</p>
+        <p><span class="highlight">🎯 Как се играе:</span> Гласът обявява локацията. Всички затварят очи. Алхимикът може да излекува 2-ма. При първо убийство — хвърля се монета: ези = оживява, тура = умира.</p>
+      </div>
+
+      <div class="location-rule">
+        <h4><span class="icon">🏨</span>Хотел</h4>
+        <p><span class="highlight">Бонуси:</span> Комисарят може да подслушва веднъж. Следотърсачът вижда точното оръжие.</p>
+        <p><span class="highlight">Минуси:</span> Публично гласуване. Убийците могат да убият 2-ма веднъж.</p>
+        <p><span class="highlight">🎯 Как се играе:</span> Гласът обявява локацията. Комисарят може да зададе 1 въпрос за роля. Следотърсачът получава точното име на оръжието.</p>
+      </div>
+
+      <div class="location-rule">
+        <h4><span class="icon">🍽️</span>Ресторант</h4>
+        <p><span class="highlight">Бонуси:</span> Алхимикът вижда отрова.</p>
+        <p><span class="highlight">Минуси:</span> Убийците не се знаят (хаос). Убийците могат да отровят храна. Публично гласуване. Бодигардът не може да спаси себе си. Рамкиране веднъж на игра.</p>
+        <p><span class="highlight">🎯 Как се играе:</span> Гласът обявява локацията. Убийците не се знаят — всеки действа сам. Ако убиец посочи друг убиец — той умира. Веднъж на игра отравят храна или рамкират играч.</p>
+      </div>
+    </div>
+
+    <!-- ПЪЛНА ВЕРСИЯ -->
+    <div id="rulesFull" class="rules-content">
+
+      <div class="rules-part">
+        <h3 class="part-title"><span class="icon">🎮</span>Част 1: Подготовка</h3>
+
+        <div class="rule-box">
+          <h3><span class="icon">👥</span>Брой играчи</h3>
+          <ul>
+            <li><span class="highlight">Минимум:</span> 6 играчи + 1 Глас</li>
+            <li><span class="highlight">Максимум:</span> 12 играчи + 1 Глас</li>
+          </ul>
+          <p style="font-size:13px;color:var(--text-dim);margin-top:10px;font-style:italic;">Пример с 9 играчи: 1 × Глас + 8 × играчи с роли.</p>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🎭</span>Разпределение на ролите</h3>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Задължителни:</h4>
+          <ul>
+            <li>🔴 Сериен убиец — 1</li>
+            <li>⚗️ Алхимик — 1</li>
+            <li>⚪ Свидетел — 1+</li>
+          </ul>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">По желание:</h4>
+          <ul>
+            <li>🔮 Ясновидец — при 7+ играчи</li>
+            <li>🚔 Комисар — при 8+ играчи</li>
+            <li>🔍 Следотърсач — при 8+ играчи</li>
+            <li>🛡️ Бодигард — при 9+ играчи</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🗺️</span>Стъпка 2: Теглене на локацията</h3>
+          <div class="voice-line">„Тази нощ ще играете в една сграда. Нека съдбата реши коя."</div>
+          <ul>
+            <li>Гласът разбърква 3-те карти с локации.</li>
+            <li>Тегли 1 карта — това е локацията за цялата игра.</li>
+            <li>Всички виждат коя е локацията.</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">📢</span>Стъпка 3: Обясняване на локацията</h3>
+          <div class="voice-line">„Играете в [локация]. Ето какво ви очаква тук."</div>
+          <p style="font-size:14px;color:var(--text);line-height:1.7;">Гласът обяснява на глас бонусите, минусите и специалните правила на локацията.</p>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🎴</span>Стъпка 4: Раздаване на ролите</h3>
+          <div class="voice-line">„Всеки от вас има своя съдба. Погледнете я. Но не я показвайте на никого."</div>
+          <ul>
+            <li>Гласът раздава тайно по 1 карта с роля.</li>
+            <li>Всеки гледа ролята си без да я показва.</li>
+            <li>Картите се оставят с лицето надолу.</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🔫</span>Стъпка 5: Избор на оръжие</h3>
+          <div class="voice-line">„Сега всеки от вас получава оръжие. Само убиецът има истинското."</div>
+          <ul>
+            <li>Всички затварят очи.</li>
+            <li>Убиецът отваря очи и избира 1 оръжие (тайно).</li>
+            <li>Убиецът затваря очи.</li>
+            <li>Гласът раздава останалите оръжия на другите играчи (по 1 на всеки, тайно).</li>
+            <li>Никой не знае какво оръжие има друг играч.</li>
+          </ul>
+          <p style="font-size:13px;color:var(--gold-bright);margin-top:12px;font-style:italic;">⚠️ Всяко оръжие може да се използва навсякъде — няма значение от коя локация е.</p>
+        </div>
+      </div>
+
+      <div class="rules-part">
+        <h3 class="part-title"><span class="icon">🌙</span>Част 2: Нощна фаза</h3>
+
+        <div class="rule-box">
+          <h3><span class="icon">🌑</span>Първа нощ</h3>
+          <div class="voice-line">„Затворете очи. Нощта пада. Само убиецът е буден."</div>
+          <p style="font-size:14px;color:var(--text);line-height:1.7;margin-bottom:12px;">Само 2 роли действат:</p>
+          <ul>
+            <li><span class="highlight">Убиецът</span> — избира 1 жертва.</li>
+            <li><span class="highlight">Алхимикът</span> — лекува 1 играч (може и себе си).</li>
+          </ul>
+          <p style="font-size:13px;color:var(--text-dim);margin-top:10px;font-style:italic;">Всички останали спят.</p>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🌒</span>Втора нощ и следващи</h3>
+          <p style="font-size:14px;color:var(--text);line-height:1.7;margin-bottom:12px;">От втората нощ нататък всички роли се включват. Всяка роля (без Алхимика) действа <span class="highlight">на всеки 2 вечери</span>.</p>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Ред на събуждане:</h4>
+          <ul>
+            <li><span class="highlight">1. Убиецът</span> — избира жертва</li>
+            <li><span class="highlight">2. Алхимикът</span> — лекува 1 играч (всяка вечер, не две поредни)</li>
+            <li><span class="highlight">3. Комисарят</span> — спира силата на 1 играч тази вечер</li>
+            <li><span class="highlight">4. Ясновидецът</span> — пита Гласа: „Този убиец ли е?" → „Да"/„Не"</li>
+            <li><span class="highlight">5. Следотърсачът</span> — проверява оръжие (само след първото убийство)</li>
+            <li><span class="highlight">6. Бодигардът</span> — защитава 1 играч (умира вместо него)</li>
+            <li><span class="highlight">7. Свидетелят</span> — няма сила, спи</li>
+            <li><span class="highlight">8. Всички</span> — отварят очи</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">📌</span>Важни правила за нощта</h3>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Комисарят:</h4>
+          <ul>
+            <li>Ако посочи <span class="highlight">убиец</span> → убийството не се случва.</li>
+            <li>Ако посочи <span class="highlight">друга роля</span> → нейната сила не се задейства.</li>
+          </ul>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Следотърсачът:</h4>
+          <ul>
+            <li><span class="highlight">„Колеблива улика"</span> — оръжието е близо до истинското (или е точното).</li>
+            <li><span class="highlight">„Грешна улика"</span> — няма нищо общо.</li>
+          </ul>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Бодигардът:</h4>
+          <ul>
+            <li>Ако защитеният бъде убит → Бодигардът умира вместо него.</li>
+            <li>Когато умре → дава щит на спасения за следващата вечер.</li>
+            <li>Може да спаси себе си (но не две поредни вечери).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rules-part">
+        <h3 class="part-title"><span class="icon">☀️</span>Част 3: Дневна фаза</h3>
+
+        <div class="rule-box">
+          <h3><span class="icon">📢</span>Обявяване на смъртта</h3>
+          <div class="voice-line">„Тази нощ беше убит [име]. [Насока за оръжието]."</div>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Примери за насока:</h4>
+          <ul>
+            <li>„Има прободна рана на врата от тънък предмет."</li>
+            <li>„Има следи от задушаване."</li>
+            <li>„Тялото има рана от огнестрелно оръжие."</li>
+          </ul>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Ако никой не е убит:</h4>
+          <div class="voice-line">„Тази нощ никой не умря. Но убиецът е сред вас."</div>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Ако убийството е спряно:</h4>
+          <div class="voice-line">„Убийството беше спряно. Комисарят е свършил работата си."</div>
+          <p style="font-size:13px;color:#e74c3c;margin-top:12px;"><span class="highlight">ВАЖНО:</span> Убитият показва своето оръжие (не ролята).</p>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">💬</span>Дискусия</h3>
+          <div class="voice-line">„Време е за разговор. Кой е убиецът? Кой лъже? Имате [3–5] минути."</div>
+          <ul>
+            <li>Всички обсъждат.</li>
+            <li>Всеки може да защитава себе си, да обвинява други.</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🗳️</span>Гласуване</h3>
+          <div class="voice-line">„Време е за гласуване. Кой ще напусне?"</div>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Тип гласуване:</h4>
+          <ul>
+            <li>🏨 Хотел — публично</li>
+            <li>🍽️ Ресторант — публично</li>
+            <li>🏥 Болница — анонимно (по часовниковата стрелка със затворени очи)</li>
+          </ul>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Резултат:</h4>
+          <ul>
+            <li>Най-много гласове → елиминиран.</li>
+            <li>При равенство → никой не се елиминира.</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">❌</span>Елиминиране</h3>
+          <div class="voice-line">„[Име] е елиминиран. Покажи своето оръжие."</div>
+          <p style="font-size:14px;color:var(--text);line-height:1.7;">Елиминираният показва оръжието си (не ролята).</p>
+        </div>
+      </div>
+
+      <div class="rules-part">
+        <h3 class="part-title"><span class="icon">🗺️</span>Част 4: Как се играе във всяка локация</h3>
+
+        <div class="location-rule">
+          <h4><span class="icon">🏥</span>Болница</h4>
+          <p><strong style="color:var(--gold-bright);">Как изглежда:</strong> Най-старата сграда в града. Висока, бяла, с високи прозорци. Коридорите никога не свършват. В мазето има стаи, за които никой не говори. А от стая 13 всяка нощ се чуват странни звуци.</p>
+
+          <p><strong style="color:#6bc47e;">+ Бонуси:</strong></p>
+          <ul style="list-style:none;padding:0;margin-left:0;">
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Алхимикът лекува <span class="highlight">2-ма играча</span> всяка вечер</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Всеки може да бъде спасен <span class="highlight">веднъж на игра</span> (с монета)</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Комисарят вижда ролята на убит играч</li>
+          </ul>
+
+          <p style="margin-top:14px;"><strong style="color:#e74c3c;">− Минуси:</strong></p>
+          <ul style="list-style:none;padding:0;margin-left:0;">
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Безшумно убийство с медицинско оръжие</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Анонимно гласуване</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Никой не говори през нощта</li>
+          </ul>
+
+          <p style="margin-top:14px;"><strong style="color:var(--gold-bright);">🪙 Монетата в Болницата:</strong></p>
+          <p>Първият убит играч в Болницата <span class="highlight">не умира веднага</span>. Гласът хвърля монета:</p>
+          <ul style="list-style:none;padding:0;margin-left:0;">
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ <span class="highlight">Ези</span> — играчът оживява (спасен е)</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ <span class="highlight">Тура</span> — играчът умира</li>
+          </ul>
+          <p>Това важи <span class="highlight">само веднъж на игра</span>. Ако втори играч бъде убит в Болницата — той умира без спасяване.</p>
+
+          <div class="voice-line">„Болницата лекува, но и крие най-тъмните тайни."</div>
+        </div>
+
+        <div class="location-rule">
+          <h4><span class="icon">🏨</span>Хотел</h4>
+          <p><strong style="color:var(--gold-bright);">Как изглежда:</strong> Някога най-луксозното място в града. Високи тавани, кристални полилеи, червени килими. Сега е почти празен — само няколко стаи се използват, останалите са заключени. Ключовете са изгубени.</p>
+
+          <p><strong style="color:#6bc47e;">+ Бонуси:</strong></p>
+          <ul style="list-style:none;padding:0;margin-left:0;">
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Комисарят може да <span class="highlight">подслушва</span> веднъж на игра</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Следотърсачът вижда <span class="highlight">точното оръжие</span></li>
+          </ul>
+
+          <p style="margin-top:14px;"><strong style="color:#e74c3c;">− Минуси:</strong></p>
+          <ul style="list-style:none;padding:0;margin-left:0;">
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Публично гласуване</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Убийците могат да убият <span class="highlight">2-ма веднъж на игра</span></li>
+          </ul>
+
+          <p style="margin-top:14px;"><strong style="color:var(--gold-bright);">🎯 Как се играе:</strong></p>
+          <p>Гласът обявява локацията. Всички затварят очи. Нощта е нормална. При гласуване — всеки казва на глас за кого гласува. Комисарят веднъж на игра може да попита Гласа: „Този играч има ли нощна роля?" → „Да" или „Не".</p>
+
+          <div class="voice-line">„В Хотела всеки е сам. Но не всички са сами по свой избор."</div>
+        </div>
+
+        <div class="location-rule">
+          <h4><span class="icon">🍽️</span>Ресторант</h4>
+          <p><strong style="color:var(--gold-bright);">Как изглежда:</strong> Единственото място в града, където хората още се събират. Дълги маси с бели покривки. Свещи във всеки ъгъл. Стари картини по стените. Мирис на храна, която вече не е това, което беше.</p>
+
+          <p><strong style="color:#6bc47e;">+ Бонуси:</strong></p>
+          <ul style="list-style:none;padding:0;margin-left:0;">
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Алхимикът <span class="highlight">вижда отрова</span></li>
+          </ul>
+
+          <p style="margin-top:14px;"><strong style="color:#e74c3c;">− Минуси:</strong></p>
+          <ul style="list-style:none;padding:0;margin-left:0;">
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Убийците <span class="highlight">не се знаят</span> (хаос)</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Убийците могат да <span class="highlight">отровят храна</span> веднъж</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Публично гласуване</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Бодигардът не може да спаси себе си</li>
+            <li style="font-size:13px;color:var(--text);padding:4px 0 4px 18px;position:relative;">◆ Рамкиране веднъж на игра</li>
+          </ul>
+
+          <p style="margin-top:14px;"><strong style="color:var(--gold-bright);">🎯 Как се играе:</strong></p>
+          <p>Гласът обявява локацията. Убийците <span class="highlight">не се знаят</span> — всеки действа сам. Ако убиец посочи друг убиец — той умира. Веднъж на игра убийците могат да отровят храна на 1 играч (умира след 2 рунда). Също веднъж на игра могат да рамкират 1 играч — ако Комисарят или Ясновидецът го проверят, Гласът казва „Убиец е" (лъжа).</p>
+
+          <div class="voice-line">„В Ресторанта всеки може да те убие — с нож или с приказка."</div>
+        </div>
+      </div>
+
+      <div class="rules-part">
+        <h3 class="part-title"><span class="icon">🃏</span>Част 5: Карти на Гласа</h3>
+
+        <div class="rule-box">
+          <h3><span class="icon">⏰</span>Кога се включват?</h3>
+          <p style="font-size:14px;color:var(--text);line-height:1.7;">След <span class="highlight">2 или 3 кръга</span> (Гласът и играчите решават заедно).</p>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">⚙️</span>Как работят?</h3>
+          <ul>
+            <li>Гласът тегли <span class="highlight">1 карта на всеки кръг</span>.</li>
+            <li>Може да я изиграе <span class="highlight">когато реши</span> — не е задължително веднага.</li>
+            <li>Играчите виждат <span class="highlight">само ефекта</span>, не картата.</li>
+          </ul>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🃏</span>Примерни карти</h3>
+          <ul>
+            <li>🔄 <span class="highlight">Смяна на ролите</span> — двама разменят ролите си до края</li>
+            <li>🛡️ <span class="highlight">Безсмъртие</span> — никой не умира тази нощ</li>
+            <li>🎭 <span class="highlight">Двойна игра</span> — убиец трябва да убие свой</li>
+            <li>👻 <span class="highlight">Шепот от отвъдното</span> — елиминираните дават 1 послание</li>
+            <li>🩸 <span class="highlight">Нов убиец + Щит</span> — 1 добър става убиец + всички получават щит</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rules-part">
+        <h3 class="part-title"><span class="icon">🔁</span>Част 6: Повтаряне на цикъла</h3>
+
+        <div class="rule-box">
+          <h3><span class="icon">🔄</span>Как продължава играта?</h3>
+          <p style="font-size:14px;color:var(--text);line-height:1.7;margin-bottom:12px;">След дневната фаза играта се връща към <span class="highlight">нощната фаза</span>.</p>
+          <p style="font-size:15px;color:var(--gold-bright);text-align:center;letter-spacing:2px;margin:14px 0;">Нощ → Ден → Нощ → Ден...</p>
+          <h4 style="font-size:12px;color:var(--gold-bright);letter-spacing:1.5px;text-transform:uppercase;margin:14px 0 8px;">Играта продължава, докато:</h4>
+          <ul>
+            <li>Всички убийци са елиминирани → 🔵 Добрите печелят</li>
+            <li>Убийците са мнозинство → 🔴 Убийците печелят</li>
+            <li>Всички добри са мъртви → 🔴 Убийците печелят</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rules-part">
+        <h3 class="part-title"><span class="icon">🎙️</span>Част 7: Примерни реплики на Гласа</h3>
+
+        <div class="rule-box">
+          <h3><span class="icon">🎬</span>Начало на играта</h3>
+          <div class="voice-line">„Добре дошли в Града на забравените. Тази нощ ще има смърт. Сред вас има убиец. Намерете го — преди да е убил вас."</div>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🌙</span>Начало на нощта</h3>
+          <div class="voice-line">„Затворете очи. Нощта пада. Само убиецът е буден."</div>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🎭</span>Приканване на ролите</h3>
+          <div class="voice-line">„Убиецът отваря очи. Избери своята жертва."</div>
+          <div class="voice-line">„Алхимикът отваря очи. Избери кого да излекуваш. Можеш дори себе си."</div>
+          <div class="voice-line">„Комисарят отваря очи. Посочи някого и спри неговата сила."</div>
+          <div class="voice-line">„Ясновидецът отваря очи. Посочи някого и разбери дали е убиец."</div>
+          <div class="voice-line">„Следотърсачът отваря очи. Посочи някого и разбери какво оръжие държи."</div>
+          <div class="voice-line">„Бодигардът отваря очи. Посочи кого да защитиш тази вечер."</div>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🌅</span>Край на нощта</h3>
+          <div class="voice-line">„Всички отварят очи. Нощта свърши."</div>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">📢</span>Обявяване на смърт</h3>
+          <div class="voice-line">„Тази нощ беше убит [име]. Има прободна рана на врата от тънък предмет."</div>
+          <div class="voice-line">„Тази нощ никой не умря. Но убиецът е сред вас."</div>
+          <div class="voice-line">„Убийството беше спряно. Комисарят е свършил работата си."</div>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🪙</span>Специално за Болница</h3>
+          <div class="voice-line">„[Име] беше убит. Но съдбата реши друго — хвърляме монета. Ези! [Име] оживява!"</div>
+          <div class="voice-line">„Хвърляме монета. Тура. [Име] умира."</div>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">💬</span>Дискусия</h3>
+          <div class="voice-line">„Време е за разговор. Кой е убиецът? Кой лъже? Имате 5 минути."</div>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🗳️</span>Гласуване</h3>
+          <div class="voice-line">„Време е за гласуване. Кой ще напусне?"</div>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">❌</span>Елиминиране</h3>
+          <div class="voice-line">„[Име] е елиминиран. Покажи своето оръжие."</div>
+        </div>
+
+        <div class="rule-box">
+          <h3><span class="icon">🏆</span>Край на играта</h3>
+          <div class="voice-line">„Играта свърши. [Отбор] печели. Градът е [спасен/обречен]."</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- РОЛИ -->
+  <div class="section" id="roles">
+    <button class="back-btn" onclick="showSection('home')">← Обратно към началото</button>
+
+    <div class="section-header">
+      <h2><span class="icon">🎭</span>Роли</h2>
+      <div class="line"></div>
+      <p>Всеки получава тайна роля. Някои служат на истината. Други — на смъртта.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card" onclick="openModal('killer')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/killer.png" alt="Сериен убиец">
+          <div class="card-fallback">🔴</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Сериен убиец</div>
+          <div class="tag bad">Лош</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('alchemist')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/alchemist.png" alt="Алхимик">
+          <div class="card-fallback">⚗️</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Алхимик</div>
+          <div class="tag good">Добър</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('seer')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/seer.png" alt="Ясновидец">
+          <div class="card-fallback">🔮</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Ясновидец</div>
+          <div class="tag good">Добър</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('tracker')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/tracker.png" alt="Следотърсач">
+          <div class="card-fallback">🔍</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Следотърсач</div>
+          <div class="tag good">Добър</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('commissioner')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/commissioner.png" alt="Комисар">
+          <div class="card-fallback">🚔</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Комисар</div>
+          <div class="tag good">Добър</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('bodyguard')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/bodyguard.png" alt="Бодигард">
+          <div class="card-fallback">🛡️</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Бодигард</div>
+          <div class="tag good">Добър</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('witness')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/witness.png" alt="Свидетел">
+          <div class="card-fallback">⚪</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Свидетел</div>
+          <div class="tag neutral">Неутрален</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('witness2')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/witness2.png" alt="Свидетел 2">
+          <div class="card-fallback">⚪</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Свидетел</div>
+          <div class="tag neutral">Неутрален</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- СЪБИТИЯ -->
+  <div class="section" id="events">
+    <button class="back-btn" onclick="showSection('home')">← Обратно към началото</button>
+
+    <div class="section-header">
+      <h2><span class="icon">🃏</span>Събития</h2>
+      <div class="line"></div>
+      <p>Картите на Гласа. Променят хода на играта, когато той реши.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card" onclick="openModal('card-swap')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/card-swap.png" alt="Смяна на ролите">
+          <div class="card-fallback">🔄</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Смяна на ролите</div>
+          <div class="tag">Постоянна</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('card-immortal')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/card-immortal.png" alt="Безсмъртие">
+          <div class="card-fallback">🛡️</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Безсмъртие</div>
+          <div class="tag">Защитна</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('card-double')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/card-double.png" alt="Двойна игра">
+          <div class="card-fallback">🎭</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Двойна игра</div>
+          <div class="tag">Хаос</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('card-whisper')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/card-whisper.png" alt="Шепот от отвъдното">
+          <div class="card-fallback">👻</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Шепот от отвъдното</div>
+          <div class="tag">Социална</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('card-newkiller')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/card-newkiller.png" alt="Нов убиец + Щит">
+          <div class="card-fallback">🩸</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Нов убиец + Щит</div>
+          <div class="tag">Промяна</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ОРЪЖИЯ -->
+  <div class="section" id="weapons">
+    <button class="back-btn" onclick="showSection('home')">← Обратно към началото</button>
+
+    <div class="section-header">
+      <h2><span class="icon">🔫</span>Оръжия</h2>
+      <div class="line"></div>
+      <p>Всяко убийство оставя следа. Всяко оръжие разказва история.</p>
+    </div>
+
+    <div class="location-rule" style="margin-bottom: 30px;">
+      <h4><span class="icon">⚔️</span>Правило за оръжията</h4>
+      <p><span class="highlight">Всяко оръжие може да се използва навсякъде.</span> Няма значение от коя локация е — убиецът може да убива с всяко оръжие, независимо къде се играе.</p>
+      <p>В играта има <span class="highlight">7 оръжия</span> общо. Всички те са достъпни за убиеца и за раздаване на другите играчи.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card" onclick="openModal('weapon-scalpel')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/scalpel.png" alt="Скалпел">
+          <div class="card-fallback">🔪</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Скалпел</div>
+          <div class="tag">Оръжие</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('weapon-injection')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/injection.png" alt="Инжекция">
+          <div class="card-fallback">💉</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Инжекция</div>
+          <div class="tag">Оръжие</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('weapon-maket-knife')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/maket-knife.png" alt="Макетен нож">
+          <div class="card-fallback">🔪</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Макетен нож</div>
+          <div class="tag">Оръжие</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('weapon-knife')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/knife.png" alt="Нож">
+          <div class="card-fallback">🔪</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Нож</div>
+          <div class="tag">Оръжие</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('weapon-pipe')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/pipe.png" alt="Сантъбна тръба">
+          <div class="card-fallback">🔧</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Сантъбна тръба</div>
+          <div class="tag">Оръжие</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('weapon-fork')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/fork.png" alt="Вилица">
+          <div class="card-fallback">🍴</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Вилица</div>
+          <div class="tag">Оръжие</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('weapon-glass')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/glass.png" alt="Счупена чаша">
+          <div class="card-fallback">🍷</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Счупена чаша</div>
+          <div class="tag">Оръжие</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЛОКАЦИИ -->
+  <div class="section" id="locations">
+    <button class="back-btn" onclick="showSection('home')">← Обратно към началото</button>
+
+    <div class="section-header">
+      <h2><span class="icon">🗺️</span>Локации</h2>
+      <div class="line"></div>
+      <p>Три сгради. Три съдби. Всяка със своите тайни.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card" onclick="openModal('hospital')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/hospital.png" alt="Болница">
+          <div class="card-fallback">🏥</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Болница</div>
+          <div class="tag">Лекува и крие</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('hotel')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/hotel.png" alt="Хотел">
+          <div class="card-fallback">🏨</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Хотел</div>
+          <div class="tag">Изолация</div>
+        </div>
+      </div>
+
+      <div class="card" onclick="openModal('restaurant')">
+        <div class="card-image-wrapper">
+          <img class="card-image" src="images/restaurant.png" alt="Ресторант">
+          <div class="card-fallback">🍽️</div>
+        </div>
+        <div class="card-overlay">
+          <div class="name">Ресторант</div>
+          <div class="tag">Предателство</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ПРИМЕРИ -->
+  <div class="section" id="examples">
+    <button class="back-btn" onclick="showSection('home')">← Обратно към началото</button>
+
+    <div class="section-header">
+      <h2><span class="icon">🎙️</span>Примери</h2>
+      <div class="line"></div>
+      <p>Какво може да казва Гласът и как се играе</p>
+    </div>
+
+    <div class="example-box">
+      <h3>🎬 Начало на играта</h3>
+      <div class="voice-line">„Добре дошли в Града на забравените. Тази нощ ще има смърт. Сред вас има убиец. Намерете го — преди да е убил вас."</div>
+      <p>Гласът раздава ролите, локацията и оръжията. Играта започва.</p>
+    </div>
+
+    <div class="example-box">
+      <h3>🌙 Начало на нощта</h3>
+      <div class="voice-line">„Затворете очи. Нощта пада. Само убиецът е буден."</div>
+      <p>Всички затварят очи. Гласът започва да приканва ролите една по една.</p>
+    </div>
+
+    <div class="example-box">
+      <h3>🪙 Хвърляне на монета (Болница)</h3>
+      <div class="voice-line">„[Име] беше убит. Но съдбата реши друго — хвърляме монета. Ези! [Име] оживява!"</div>
+      <p>Или: „Тура. [Име] умира."</p>
+      <p>Монетата важи само веднъж на игра.</p>
+    </div>
+
+    <div class="example-box">
+      <h3>☀️ Обявяване на смъртта</h3>
+      <div class="voice-line">„Тази нощ беше убит Играч 3. Има прободна рана на врата от тънък предмет."</div>
+      <p>Играч 3 показва своето оръжие (не ролята). Всички виждат уликата.</p>
+    </div>
+
+    <div class="example-box">
+      <h3>🔍 Следотърсач в Хотел</h3>
+      <div class="voice-line">„Следотърсачът отваря очи. Посочи някого и виж точното оръжие."</div>
+      <p>В Хотел Следотърсачът вижда точното име — Скалпел, Нож, Инжекция.</p>
+    </div>
+
+    <div class="example-box">
+      <h3>🍽️ Ресторант — Убийците не се знаят</h3>
+      <div class="voice-line">„Убийците отварят очи. Но днес вие не се виждате. Всеки избира сам."</div>
+      <p>В Ресторант убийците не се знаят. Ако убиец посочи друг убиец — той умира.</p>
+    </div>
+
+    <div class="example-box">
+      <h3>👻 Шепот от отвъдното</h3>
+      <div class="voice-line">„Мъртвите говорят. Слушайте внимателно — но не вярвайте на всичко."</div>
+      <p>Всеки елиминиран дава 1 кратко послание. Гласът ги прочита на глас.</p>
+    </div>
+
+    <div class="example-box">
+      <h3>🗳️ Гласуване</h3>
+      <div class="voice-line">„Време е за гласуване. Кой ще напусне Града завинаги?"</div>
+      <p>Публично (Хотел, Ресторант) или анонимно (Болница). Мнозинството решава.</p>
+    </div>
+
+    <div class="example-box">
+      <h3>🏆 Край на играта</h3>
+      <div class="voice-line">„Играта свърши. Добрите печелят. Градът е спасен."</div>
+      <p>Или: „Убийците печелят. Градът е обречен."</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="ornament">✦ ✦ ✦</div>
+  <div>© 2026 Последният Свидетел</div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-image-wrapper">
+      <img class="modal-image" id="modalImage" src="" alt="">
+    </div>
+    <div class="modal-header">
+      <h3 id="modalTitle">Заглавие</h3>
+      <div id="modalBadge"></div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const data = {
+  killer: {
+    title: 'Сериен убиец',
+    badge: '<span class="badge badge-bad">Лош отбор</span>',
+    quote: '„Всяка нощ избираш жертва — и всяка сутрин градът се събужда с една усмивка по-малко."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>Убива 1 играч всяка нощ.</li>
+        <li>Избира 1 оръжие в началото на играта (всяко оръжие работи навсякъде).</li>
+        <li>Печели, когато елиминира всички добри.</li>
+      </ul>
+      <h4>С 1 локация</h4>
+      <ul>
+        <li>Избира оръжие от 7-те налични.</li>
+        <li>Може да убива всяка нощ без ограничения.</li>
+      </ul>
+      <h4>С 2 локации</h4>
+      <ul>
+        <li>Избира оръжие — всяко работи.</li>
+        <li>Може да убива всяка нощ.</li>
+      </ul>
+    `
+  },
+  alchemist: {
+    title: 'Алхимик',
+    badge: '<span class="badge badge-good">Добър отбор</span>',
+    quote: '„В ръцете ти има живот и смърт — и само ти решаваш кое да победи тази вечер."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>Лекува 1 играч всяка вечер.</li>
+        <li>Може да лекува себе си — но не две поредни вечери.</li>
+        <li>Ако излекува убития → той не умира.</li>
+      </ul>
+      <h4>С 2 локации</h4>
+      <ul>
+        <li>В 🏥 Болница лекува 2-ма.</li>
+        <li>В 🍽️ Ресторант вижда дали има отрова.</li>
+      </ul>
+    `
+  },
+  seer: {
+    title: 'Ясновидец',
+    badge: '<span class="badge badge-good">Добър отбор</span>',
+    quote: '„Виждаш това, което другите крият — но истината понякога е по-тежка от лъжата."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>На всеки 2 вечери проверява 1 играч.</li>
+        <li>Вижда точната му роля.</li>
+        <li>Не може да проверява един и същ човек два поредни пъти.</li>
+      </ul>
+    `
+  },
+  tracker: {
+    title: 'Следотърсач',
+    badge: '<span class="badge badge-good">Добър отбор</span>',
+    quote: '„Следваш стъпките, които убиецът оставя — и се надяваш да стигнеш до него, преди да е късно."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>На всеки 2 вечери проверява 1 играч.</li>
+        <li>Гласът казва „Колеблива улика" или „Грешна улика".</li>
+      </ul>
+      <h4>Важно</h4>
+      <ul>
+        <li>Не действа първата нощ.</li>
+        <li>Силата му се отключва след първото убийство.</li>
+      </ul>
+      <h4>В Хотел</h4>
+      <ul>
+        <li>Вижда точното име на оръжието (Скалпел, Нож, Инжекция).</li>
+      </ul>
+    `
+  },
+  commissioner: {
+    title: 'Комисар',
+    badge: '<span class="badge badge-good">Добър отбор</span>',
+    quote: '„Една твоя дума може да спре убиец — или да осъди невинен."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>На всеки 2 вечери арестува 1 играч.</li>
+        <li>Ако е убиец → убийството се прекратява.</li>
+        <li>Ако е добър с роля → вижда ролята му.</li>
+      </ul>
+      <h4>В Хотел</h4>
+      <ul>
+        <li>Веднъж на игра може да подслушва — пита дали играч има нощна роля.</li>
+      </ul>
+      <h4>В Болница</h4>
+      <ul>
+        <li>Ако някой бъде убит през нощта — Комисарят разбира ролята му.</li>
+      </ul>
+    `
+  },
+  bodyguard: {
+    title: 'Бодигард',
+    badge: '<span class="badge badge-good">Добър отбор</span>',
+    quote: '„Ти си щитът, който поема удара — защото някой трябва да живее, дори когато ти умираш."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>На всеки 2 вечери защитава 1 играч.</li>
+        <li>Ако той бъде убит → Бодигардът умира вместо него.</li>
+        <li>Може да спаси себе си — но не две поредни вечери.</li>
+      </ul>
+      <h4>В Ресторант</h4>
+      <ul>
+        <li>Не може да спаси себе си.</li>
+      </ul>
+    `
+  },
+  witness: {
+    title: 'Свидетел',
+    badge: '<span class="badge badge-neutral">Неутрален</span>',
+    quote: '„Нямаш сила, нямаш оръжие — но имаш очи, уши и глас, който може да промени всичко."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>Няма способности.</li>
+        <li>Гласува, говори, наблюдава.</li>
+      </ul>
+      <h4>Съвет</h4>
+      <ul>
+        <li>Слушай внимателно — ти си най-важният глас в дискусията.</li>
+      </ul>
+    `
+  },
+  witness2: {
+    title: 'Свидетел',
+    badge: '<span class="badge badge-neutral">Неутрален</span>',
+    quote: '„Нямаш сила, нямаш оръжие — но имаш очи, уши и глас, който може да промени всичко."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>Няма способности.</li>
+        <li>Гласува, говори, наблюдава.</li>
+      </ul>
+      <h4>Съвет</h4>
+      <ul>
+        <li>Слушай внимателно — ти си най-важният глас в дискусията.</li>
+        <li>Помагай на добрите с логика и наблюдение.</li>
+      </ul>
+      <h4>Защо има двама Свидетели?</h4>
+      <ul>
+        <li>В игри с 8+ играчи се използват 2 Свидетели.</li>
+        <li>Те запълват местата и дават баланс.</li>
+      </ul>
+    `
+  },
+
+  hospital: {
+    title: 'Болница',
+    badge: '',
+    quote: '„Болницата лекува, но и крие най-тъмните тайни."',
+    body: `
+      <h4>📖 Как изглежда</h4>
+      <p>Болницата е най-старата сграда в града. Висока, бяла, с високи прозорци и стъклени врати. Вътре коридорите сякаш никога не свършват — дълги, тихи, със стари лампи, които примигват.</p>
+      <p>Мирише на лекарства и на нещо друго. Нещо, което не можеш да определиш. Може би на страх.</p>
+      <p>В мазето има стаи, за които никой не говори. А от стая 13 всяка нощ се чуват странни звуци.</p>
+      <p>Лекарите работят на смени, но никой не ги е виждал да излизат. Сестрите не си говорят. А пациентите — те просто чакат.</p>
+      <h4>📜 Правила на Болницата</h4>
+      <ul>
+        <li><span class="highlight">Анонимно гласуване:</span> всички затварят очи, един по един се събуждат по ред на часовниковата стрелка и посочват кого искат да изгонят. Гласът следи кой за кого е гласувал.</li>
+        <li><span class="highlight">Никой не говори през нощта:</span> всички действат с жестове.</li>
+        <li><span class="highlight">Алхимикът лекува двама:</span> в Болница Алхимикът лекува всеки вечер по 2 играча.</li>
+        <li><span class="highlight">Безшумно убийство:</span> при медицинско оръжие Следотърсачът вижда „Колеблива улика" дори за грешен играч.</li>
+        <li><span class="highlight">Комисарят вижда ролята на убит:</span> ако някой бъде убит през нощта, Комисарят разбира каква е била неговата роля.</li>
+      </ul>
+      <h4>🪙 Монетата в Болницата</h4>
+      <p>Първият убит играч в Болницата <span class="highlight">не умира веднага</span>. Гласът хвърля монета:</p>
+      <ul>
+        <li><span class="highlight">Ези</span> — играчът оживява (спасен е).</li>
+        <li><span class="highlight">Тура</span> — играчът умира.</li>
+      </ul>
+      <p>Това важи <span class="highlight">само веднъж на игра</span>. Ако втори играч бъде убит в Болницата — той умира без спасяване.</p>
+      <h4>⚖️ Баланс</h4>
+      <div class="pros-cons">
+        <div class="pros">
+          <h5>+ Бонуси</h5>
+          <ul>
+            <li>Алхимикът лекува 2-ма всяка вечер</li>
+            <li>Всеки може да бъде спасен веднъж (монета)</li>
+            <li>Комисарят вижда ролята на убит</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h5>− Минуси</h5>
+          <ul>
+            <li>Безшумно убийство с медицинско оръжие</li>
+            <li>Анонимно гласуване</li>
+            <li>Никой не говори през нощта</li>
+          </ul>
+        </div>
+      </div>
+    `
+  },
+  hotel: {
+    title: 'Хотел',
+    badge: '',
+    quote: '„В Хотела всеки е сам. Но не всички са сами по свой избор."',
+    body: `
+      <h4>📖 Как изглежда</h4>
+      <p>Хотелът някога е бил най-луксозното място в града. Високи тавани, кристални полилеи, червени килими и стари дървени стълби, които скърцат под краката.</p>
+      <p>Сега е почти празен. Само няколко стаи се използват. Останалите са заключени. Ключовете са изгубени. А на рецепцията стои регистър, в който имената на някои гости са заличени.</p>
+      <p>Във всяка стая има стара мебел, забравени вещи, прах. Казват, че ако слушаш внимателно, можеш да чуеш стъпки в коридора. Но когато отвориш вратата — никой няма.</p>
+      <p>Хотелът е място за почивка. Но тук никой не почива.</p>
+      <h4>📜 Правила на Хотела</h4>
+      <ul>
+        <li><span class="highlight">Публично гласуване:</span> всеки казва на глас за кого гласува. Всички виждат кой за кого е гласувал.</li>
+        <li><span class="highlight">Комисарят може да подслушва:</span> веднъж на игра пита Гласа: „Този играч има ли нощна роля?" → „Да" или „Не".</li>
+        <li><span class="highlight">Следотърсачът вижда точното оръжие:</span> не само дали е близо — вижда точното име (Скалпел, Нож, Инжекция).</li>
+        <li><span class="highlight">Убийците могат да убият двама:</span> веднъж на игра избират 2 жертви вместо 1.</li>
+      </ul>
+      <h4>⚖️ Баланс</h4>
+      <div class="pros-cons">
+        <div class="pros">
+          <h5>+ Бонуси</h5>
+          <ul>
+            <li>Комисарят може да подслушва веднъж</li>
+            <li>Следотърсачът вижда точното оръжие</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h5>− Минуси</h5>
+          <ul>
+            <li>Публично гласуване</li>
+            <li>Убийците могат да убият 2-ма веднъж</li>
+          </ul>
+        </div>
+      </div>
+    `
+  },
+  restaurant: {
+    title: 'Ресторант',
+    badge: '',
+    quote: '„В Ресторанта всеки може да те убие — с нож или с приказка."',
+    body: `
+      <h4>📖 Как изглежда</h4>
+      <p>Ресторантът е единственото място в града, където хората още се събират. Дълги маси, покрити с бели покривки. Свещи във всеки ъгъл. Стари картини по стените. И мирис на храна, която вече не е това, което беше.</p>
+      <p>Готвачът е напуснал преди месеци. Сервитьорите не си говорят. А в кухнята има ножове, които никой не използва — освен един.</p>
+      <p>Казват, че тук всеки може да те убие. С нож. С вилица. С приказка. Защото в Ресторанта думите са по-опасни от оръжията. И всеки може да те отрови — буквално или метафорично.</p>
+      <h4>📜 Правила на Ресторанта</h4>
+      <ul>
+        <li><span class="highlight">Публично гласуване:</span> всеки казва на глас за кого гласува. Всички виждат кой за кого е гласувал.</li>
+        <li><span class="highlight">Убийците не се знаят:</span> всеки действа сам. Ако убиец посочи друг убиец — той умира.</li>
+        <li><span class="highlight">Убийците могат да отровят храна:</span> веднъж на игра отравят 1 играч. Отровеният умира след 2 рунда. Алхимикът може да го спаси.</li>
+        <li><span class="highlight">Алхимикът вижда отрова:</span> вижда дали някой е отровил храна тази вечер, но не знае кой.</li>
+        <li><span class="highlight">Бодигардът не може да спаси себе си:</span> може да защити само други играчи.</li>
+        <li><span class="highlight">Рамкиране:</span> веднъж на игра убийците рамкират 1 играч. Ако Комисарят или Ясновидецът го проверят — Гласът казва „Убиец е" (лъжа).</li>
+      </ul>
+      <h4>⚖️ Баланс</h4>
+      <div class="pros-cons">
+        <div class="pros">
+          <h5>+ Бонуси</h5>
+          <ul>
+            <li>Алхимикът вижда отрова</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h5>− Минуси</h5>
+          <ul>
+            <li>Убийците не се знаят (хаос)</li>
+            <li>Убийците отравят храна</li>
+            <li>Публично гласуване</li>
+            <li>Бодигардът не може да спаси себе си</li>
+            <li>Рамкиране веднъж на игра</li>
+          </ul>
+        </div>
+      </div>
+    `
+  },
+
+  /* ОРЪЖИЯ - 7 */
+  'weapon-scalpel': {
+    title: 'Скалпел',
+    badge: '<span class="badge badge-good">Оръжие</span>',
+    quote: '„Точен. Безшумен. Смъртоносен."',
+    body: `
+      <h4>Как се използва</h4>
+      <ul><li>Може да убива навсякъде — няма значение от коя локация е.</li></ul>
+      <h4>Следотърсач</h4>
+      <ul><li>При проверка на убит с това оръжие → „Колеблива улика".</li></ul>
+    `
+  },
+  'weapon-injection': {
+    title: 'Инжекция',
+    badge: '<span class="badge badge-good">Оръжие</span>',
+    quote: '„Една инжекция — и всичко свършва."',
+    body: `
+      <h4>Как се използва</h4>
+      <ul><li>Може да убива навсякъде.</li></ul>
+    `
+  },
+  'weapon-maket-knife': {
+    title: 'Макетен нож',
+    badge: '<span class="badge badge-good">Оръжие</span>',
+    quote: '„Изглежда като играчка. Докато не прореже плътта."',
+    body: `
+      <h4>Как се използва</h4>
+      <ul><li>Може да убива навсякъде.</li></ul>
+    `
+  },
+  'weapon-knife': {
+    title: 'Нож',
+    badge: '<span class="badge badge-good">Оръжие</span>',
+    quote: '„Класика. Винаги работи."',
+    body: `
+      <h4>Как се използва</h4>
+      <ul><li>Може да убива навсякъде.</li></ul>
+    `
+  },
+  'weapon-pipe': {
+    title: 'Сантъбна тръба',
+    badge: '<span class="badge badge-good">Оръжие</span>',
+    quote: '„Тежка. Студена. Безмилостна."',
+    body: `
+      <h4>Как се използва</h4>
+      <ul><li>Може да убива навсякъде.</li></ul>
+    `
+  },
+  'weapon-fork': {
+    title: 'Вилица',
+    badge: '<span class="badge badge-good">Оръжие</span>',
+    quote: '„Изглежда невинно. Докато не проникне в гърлото."',
+    body: `
+      <h4>Как се използва</h4>
+      <ul><li>Може да убива навсякъде.</li></ul>
+    `
+  },
+  'weapon-glass': {
+    title: 'Счупена чаша',
+    badge: '<span class="badge badge-good">Оръжие</span>',
+    quote: '„Елегантна. Остра. Смъртоносна."',
+    body: `
+      <h4>Как се използва</h4>
+      <ul><li>Може да убива навсякъде.</li></ul>
+    `
+  },
+
+  /* КАРТИ НА ГЛАСА - 5 */
+  'card-swap': {
+    title: 'Смяна на ролите',
+    badge: '<span class="badge badge-neutral">Постоянна</span>',
+    quote: '„Двама разменят съдбите си — завинаги."',
+    body: `
+      <h4>Кога се използва</h4>
+      <ul><li>Само веднъж на игра, в ранна фаза.</li></ul>
+      <h4>Какво прави</h4>
+      <ul>
+        <li>Гласът избира двама случайни играчи.</li>
+        <li>Те разменят ролите си до края на играта.</li>
+      </ul>
+    `
+  },
+  'card-immortal': {
+    title: 'Безсмъртие',
+    badge: '<span class="badge badge-neutral">Защитна</span>',
+    quote: '„Тази нощ смъртта няма сила."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>Никой не може да бъде убит тази нощ.</li>
+        <li>Убийците избират жертва, но тя не умира.</li>
+        <li>На сутринта Гласът казва: „Тази нощ никой не умря."</li>
+      </ul>
+    `
+  },
+  'card-double': {
+    title: 'Двойна игра',
+    badge: '<span class="badge badge-neutral">Хаос</span>',
+    quote: '„Един убиец трябва да убие свой — или да умре."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>Гласът избира 1 убиец.</li>
+        <li>Той трябва да убие друг убиец тази нощ — или умира сам.</li>
+      </ul>
+    `
+  },
+  'card-whisper': {
+    title: 'Шепот от отвъдното',
+    badge: '<span class="badge badge-neutral">Социална</span>',
+    quote: '„Мъртвите говорят — но не винаги истината."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>Елиминираните играчи дават по 1 кратко послание на сутринта преди гласуване.</li>
+        <li>Гласът прочита всички послания на глас.</li>
+        <li>Посланията могат да бъдат истина или лъжа.</li>
+      </ul>
+    `
+  },
+  'card-newkiller': {
+    title: 'Нов убиец + Щит',
+    badge: '<span class="badge badge-neutral">Промяна</span>',
+    quote: '„Един добър става убиец. Всички получават втори шанс."',
+    body: `
+      <h4>Какво прави</h4>
+      <ul>
+        <li>1 добър играч става убиец.</li>
+        <li>Оръжието му се сменя с оригиналното.</li>
+        <li>Губи старата си роля.</li>
+        <li>След първата вечер всички получават щит.</li>
+      </ul>
+      <h4>Щит</h4>
+      <ul>
+        <li>Щитът предпазва от 1 убийство.</li>
+        <li>Изчезва след 1 рунд (ако не е използван).</li>
+      </ul>
+    `
+  }
+};
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('data-section') === id);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showRules(type) {
+  document.getElementById('rulesShort').classList.toggle('active', type === 'short');
+  document.getElementById('rulesFull').classList.toggle('active', type === 'full');
+  document.getElementById('btnShort').classList.toggle('active', type === 'short');
+  document.getElementById('btnFull').classList.toggle('active', type === 'full');
+}
+
+function openModal(key) {
+  const item = data[key];
+  if (!item) return;
+
+  const img = document.getElementById('modalImage');
+  const clickedCard = event.currentTarget.querySelector('.card-image');
+  const cardSrc = clickedCard ? clickedCard.getAttribute('src') : '';
+
+  img.src = cardSrc;
+  img.alt = item.title;
+
+  document.getElementById('modalTitle').textContent = item.title;
+  document.getElementById('modalBadge').innerHTML = item.badge || '';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="quote">${item.quote}</div>
+    ${item.body}
+  `;
+
+  document.getElementById('modalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== e.currentTarget && e.target.className !== 'modal-close') return;
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+
+</body>
+</html>
